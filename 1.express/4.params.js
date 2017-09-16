@@ -27,7 +27,18 @@
 */
 let express = require('express');
 let app = express();
-//路径的是路径名，不用匹配查询字符串
+//路径参数 放在路径里面的参数
+// http://localhost:8080/users/1/zfpx?id=1
+// req.params 是请求对象 {id:1,name:'zfpx'}
+// 什么是时候用路径传参？什么时候用?传参？
+// 当一个参数是不可或缺的时候，用路径传参，当一个参数是可有可无的，可以放在？后面
+// users?order=date&limit=8
+app.get('/users/:id/:name',function(req,res){
+   let id = req.params.id;
+  console.log(req.params);
+  res.end(''+id);
+});
+//路径的是路径名，不用匹配查询字符串 ?id=1
 app.post('/users',function(req,res){
   console.log(req.method);
   //url地址包含路径名+查询字符串
