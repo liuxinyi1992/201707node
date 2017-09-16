@@ -35,8 +35,8 @@ let app = express();
 // users?order=date&limit=8
 app.get('/users/:id/:name',function(req,res){
    let id = req.params.id;
-  console.log(req.params);
-  res.end(''+id);
+   console.log(req.params);
+   res.end(''+id);
 });
 //路径的是路径名，不用匹配查询字符串 ?id=1
 app.post('/users',function(req,res){
