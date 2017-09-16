@@ -15,6 +15,7 @@ let app = express();
 // require("querystring").parse(); req.body
 //此中间件的作用是获得请求体字符串，然后转成对象赋给req.body
 //Content-Type:application/x-www-form-urlencoded
+//
 app.use(bodyParser.urlencoded({extended:true}));
 //判断请求体的格式是不是json格式，如果是的话会调用JSON.parse方法把请求体字符串转成对象。req.body
 app.use(bodyParser.json());
@@ -69,6 +70,7 @@ app.post('/users',function(req,res){
     res.send(user);
   });
 });
+// curl -X POST -H "Content-Type:application/json" --data '{"name":"zfpx1"}' http://localhost:8080/users2
 app.post('/users2',function(req,res){
   let user = req.body;
   user.id = Date.now();
