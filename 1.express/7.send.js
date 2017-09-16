@@ -6,7 +6,18 @@
  * 但是我们希望很方便的传入任何类型
  */
 let express = require('express');
+//是第三方的中间件，专门用来解析请求体
+//中间件模块返回的都是函数，执行这个函数返回的才是中间件
+let bodyParser = require('body-parser');
 let app = express();
+//表单序列化格式 urlencoded   ?name=zfpx&age=9
+//JSON   {"name":"zfpx","age":9}
+// require("querystring").parse(); req.body
+//此中间件的作用是获得请求体字符串，然后转成对象赋给req.body
+//Content-Type:application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({extended:true}));
+//判断请求体的格式是不是json格式，如果是的话会调用JSON.parse方法把请求体字符串转成对象。req.body
+app.use(bodyParser.json());
 let statusCodes = {
   200:'OK',
   206:'Partial Content',//部分内容 下载
@@ -57,6 +68,12 @@ app.post('/users',function(req,res){
     users.push(user);
     res.send(user);
   });
+});
+app.post('/users2',function(req,res){
+  let user = req.body;
+  user.id = Date.now();
+  users.push(user);
+  res.send(user);
 });
 
 app.use(function(req,res){
