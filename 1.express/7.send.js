@@ -21,22 +21,22 @@ let statusCodes = {
   503:'Service Unavailable' //服务器暂时不可用
 }
 //添加公共的方法，可以接收任何类型的响应体
-app.use(function(req,res,next){
+/*app.use(function(req,res,next){
   res.send = function(params){
-    switch(typeof params){
-      case 'object':
-        params = JSON.stringify(params);//把对象转成字符串
-        break;
-      case 'number':
-        res.statusCode = params;
-        params = statusCodes[params];
-      default:
-        break;
-    }
+ switch(typeof params){
+ case 'object':
+ params = JSON.stringify(params);//把对象转成字符串
+ break;
+ case 'number':
+ res.statusCode = params;
+ params = statusCodes[params];
+ default:
+ break;
+ }
     res.end(params);
   }
   next();
-});
+});*/
 let users = [];
 // curl http://localhost:8080/users  获取用户数组
 app.get('/users',function(req,res){
@@ -59,4 +59,8 @@ app.post('/users',function(req,res){
   });
 });
 
+app.use(function(req,res){
+  //sendStatus
+  res.send(200+'');
+});
 app.listen(8080);
