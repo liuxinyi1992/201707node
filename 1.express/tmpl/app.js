@@ -32,9 +32,11 @@ app.get('/signup',function(req,res){
    * 3.把模板里的变量部分把数据源对象对应的同名属性值替换掉
    * 4.把替换后的字符串作为响应体发给浏览器
    */
-  let error = req.cookies.error;
+  //let error = req.cookies.error;
+  let error = req.session.error;
   //此处读完error之后要立刻清除cookie
-  res.clearCookie('error');
+  //res.clearCookie('error');
+  req.session.error = null;
   res.render('signup',{title:'用户注册',error});
 });
 //把用户提交过来的用户放到users数组中，注意判断用户名不能重复
@@ -43,7 +45,8 @@ app.post('/signup',function(req,res){
  let oldUser = users.find(item=>item.username == user.username);//找一找原来的用户数组中有没有跟本次提交过来的用户名相同的用户
  if(oldUser){
    //如果失败了，向客户端种植cookie
-   res.cookie('error','用户名已经被占用,请重新填写!');
+   //res.cookie('error','用户名已经被占用,请重新填写!');
+   req.session.error = '用户名已经被占用,请重新填写!';
    res.redirect('back');
  }else{
    users.push(user);//注册成功
@@ -53,8 +56,10 @@ app.post('/signup',function(req,res){
  }
 });
 app.get('/signin',function(req,res){
-  let error = req.cookies.error;
-  res.clearCookie('error');
+  /*let error = req.cookies.error;
+  res.clearCookie('error');*/
+  let error = req.session.error;
+  req.session.error = undefined;
   res.render('signin',{title:'用户登录',error});
 });
 app.post('/signin',function(req,res){
@@ -63,14 +68,23 @@ app.post('/signin',function(req,res){
   if(oldUser){
     // //如果登录成功，则渲染用户主页面
     // res.render('user',{title:'用户页',username:user.username});
-    res.cookie('username',user.username);
+    //res.cookie('username',user.username);
+    //在登录成功之后向会话对象中添加一个username属性
+    req.session.username = user.username;
     res.redirect('/user');
   }else{
-    res.cookie('error','用户或密码输入错误，请重新输入');
+    //res.cookie('error','用户或密码输入错误，请重新输入');
+    req.session.error = '用户或密码输入错误，请重新输入';
     res.redirect('back');//返回上一个页
   }
 });
+app.get('/signout',function(req,res){
+  //只要把会话对象中的username属性删除即可
+   req.session.username = null;
+   res.redirect('/signin');
+});
 app.get('/user',function(req,res){
+
   res.render('user',{title:'用户主页',username:req.cookies.username});
 });
 //自己实现一个登录功能 /signin   /
