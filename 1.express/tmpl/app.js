@@ -13,7 +13,7 @@ let path = require('path');
 app.set('view engine','ejs');
 //设置模板的存放目录,需要提供模板文件的绝对路径
 app.set('views',path.resolve('views'));
-
+let users = [];
 //当客户端以GET方式向服务器/signup路径发起请求的时候
 app.get('/signup',function(req,res){
  //渲染或者说显示模板的时候我们只会给一个相对路径
@@ -26,5 +26,8 @@ app.get('/signup',function(req,res){
    * 4.把替换后的字符串作为响应体发给浏览器
    */
   res.render('signup',{title:'用户注册'});
+});
+app.post('/signup',function(){
+
 });
 app.listen(8080);
