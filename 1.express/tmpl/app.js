@@ -34,7 +34,7 @@ app.get('/signup',function(req,res){
    */
   let error = req.cookies.error;
   //此处读完error之后要立刻清除cookie
-
+  res.clearCookie('error');
   res.render('signup',{title:'用户注册',error});
 });
 //把用户提交过来的用户放到users数组中，注意判断用户名不能重复
@@ -53,7 +53,9 @@ app.post('/signup',function(req,res){
  }
 });
 app.get('/signin',function(req,res){
-  res.render('signin',{title:'用户登录'});
+  let error = req.cookies.error;
+  res.clearCookie('error');
+  res.render('signin',{title:'用户登录',error});
 });
 app.post('/signin',function(req,res){
   let user = req.body;//得到bodyParser解析得到的请求体
@@ -61,10 +63,15 @@ app.post('/signin',function(req,res){
   if(oldUser){
     // //如果登录成功，则渲染用户主页面
     // res.render('user',{title:'用户页',username:user.username});
+    res.cookie('username',user.username);
     res.redirect('/user');
   }else{
+    res.cookie('error','用户或密码输入错误，请重新输入');
     res.redirect('back');//返回上一个页
   }
+});
+app.get('/user',function(req,res){
+  res.render('user',{title:'用户主页',username:req.cookies.username});
 });
 //自己实现一个登录功能 /signin   /
 app.listen(8080);
