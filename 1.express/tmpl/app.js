@@ -38,7 +38,23 @@ app.post('/signup',function(req,res){
    res.send('此用户名已经被使用');
  }else{
    users.push(user);//注册成功
-   res.send('注册成功');
+   //res.send('注册成功');// res.end
+   //重定向指让客户端向另外一个地址发送请求
+   res.redirect('/signin');//res.end
  }
 });
+app.get('/signin',function(req,res){
+  res.render('signin',{title:'用户登录'});
+});
+app.post('/signin',function(req,res){
+  let user = req.body;//得到bodyParser解析得到的请求体
+  let oldUser = users.find(item=>item.username == user.username && item.password == user.password);
+  if(oldUser){
+    //如果登录成功，则渲染用户主页面
+    res.render('user',{title:'用户页',username:user.username});
+  }else{
+    res.redirect('back');//返回上一个页
+  }
+});
+//自己实现一个登录功能 /signin   /
 app.listen(8080);
