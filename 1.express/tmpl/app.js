@@ -15,12 +15,24 @@ let path = require('path');
 app.set('view engine','html');
 //设置模板的存放目录,需要提供模板文件的绝对路径
 app.set('views',path.resolve('views'));
+let session = require('express-session');
 //设置模板的渲染方式还是为ejs
 app.engine('html',require('ejs').__express);
 let users = [];
 //true意味着在把字符串转成对象的时候用qs,否则用querystring
 app.use(bodyParser.urlencoded({extended:true}));
-app.use(cookieParser());
+app.use(session({
+  resave:true,//每次请求的时候都重新保存session
+  saveUninitialized:true,//保存未使用过的session
+  secret:'zfpx'//加密的秘钥
+}));
+function checkLogin(req,res,next){
+  if(req.session.username){
+    next();
+  }else{
+    res.redirect('/signin');
+  }
+}
 //当客户端以GET方式向服务器/signup路径发起请求的时候
 app.get('/signup',function(req,res){
  //渲染或者说显示模板的时候我们只会给一个相对路径
@@ -78,14 +90,15 @@ app.post('/signin',function(req,res){
     res.redirect('back');//返回上一个页
   }
 });
-app.get('/signout',function(req,res){
+app.get('/signout',checkLogin,function(req,res){
   //只要把会话对象中的username属性删除即可
    req.session.username = null;
    res.redirect('/signin');
 });
-app.get('/user',function(req,res){
 
-  res.render('user',{title:'用户主页',username:req.cookies.username});
+//用户的个人信息页面
+app.get('/user',checkLogin,function(req,res){
+  res.render('user',{title:'用户主页',username:req.session.username});
 });
 //自己实现一个登录功能 /signin   /
 app.listen(8080);
