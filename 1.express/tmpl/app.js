@@ -11,9 +11,11 @@ let bodyParser = require('body-parser');
 let path = require('path');
 //如果要想在express中使用模板，设置以下步骤
 //因为模板有很多种，需要告诉express模板的格式是什么
-app.set('view engine','ejs');
+app.set('view engine','html');
 //设置模板的存放目录,需要提供模板文件的绝对路径
 app.set('views',path.resolve('views'));
+//设置模板的渲染方式还是为ejs
+app.engine('html',require('ejs').__express);
 let users = [];
 //true意味着在把字符串转成对象的时候用qs,否则用querystring
 app.use(bodyParser.urlencoded({extended:true}));
