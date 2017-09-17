@@ -8,6 +8,7 @@
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
+let cookieParser = require('cookie-parser');
 let path = require('path');
 //如果要想在express中使用模板，设置以下步骤
 //因为模板有很多种，需要告诉express模板的格式是什么
@@ -19,6 +20,7 @@ app.engine('html',require('ejs').__express);
 let users = [];
 //true意味着在把字符串转成对象的时候用qs,否则用querystring
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(cookieParser());
 //当客户端以GET方式向服务器/signup路径发起请求的时候
 app.get('/signup',function(req,res){
  //渲染或者说显示模板的时候我们只会给一个相对路径
@@ -30,14 +32,19 @@ app.get('/signup',function(req,res){
    * 3.把模板里的变量部分把数据源对象对应的同名属性值替换掉
    * 4.把替换后的字符串作为响应体发给浏览器
    */
-  res.render('signup',{title:'用户注册'});
+  let error = req.cookies.error;
+  //此处读完error之后要立刻清除cookie
+
+  res.render('signup',{title:'用户注册',error});
 });
 //把用户提交过来的用户放到users数组中，注意判断用户名不能重复
 app.post('/signup',function(req,res){
  let user = req.body;//得到bodyParser解析得到的请求体
  let oldUser = users.find(item=>item.username == user.username);//找一找原来的用户数组中有没有跟本次提交过来的用户名相同的用户
  if(oldUser){
-   res.send('此用户名已经被使用');
+   //如果失败了，向客户端种植cookie
+   res.cookie('error','用户名已经被占用,请重新填写!');
+   res.redirect('back');
  }else{
    users.push(user);//注册成功
    //res.send('注册成功');// res.end
@@ -52,8 +59,9 @@ app.post('/signin',function(req,res){
   let user = req.body;//得到bodyParser解析得到的请求体
   let oldUser = users.find(item=>item.username == user.username && item.password == user.password);
   if(oldUser){
-    //如果登录成功，则渲染用户主页面
-    res.render('user',{title:'用户页',username:user.username});
+    // //如果登录成功，则渲染用户主页面
+    // res.render('user',{title:'用户页',username:user.username});
+    res.redirect('/user');
   }else{
     res.redirect('back');//返回上一个页
   }

@@ -9,6 +9,11 @@ let cookieParser = require('cookie-parser');
 let app = express();
 //使用了此中间件后，会增加req.cookies
 app.use(cookieParser());
+/**
+ * 1.提高性能
+ * 2.节约流量
+ * 3.安全
+ */
 app.get('/write',function(req,res){
   //cookie方法是express提供的，可以用来向客户端写入cookie
   //cookie的各种参数是用来限制cookie的发送时机的
@@ -16,8 +21,18 @@ app.get('/write',function(req,res){
   /*res.cookie('age',8,{
     domain:'a.zfpx.cn'
   });*/
-  res.cookie('age',8,{
+  /*res.cookie('age',8,{
     path:'/read1'
+  });*/
+  /*res.cookie('age',8,{
+    expires:new Date(Date.now()+10*1000)
+  });*/
+  /*res.cookie('age',8,{
+    maxAge:10*1000
+  });*/
+  // http 仅限http可见，浏览器通过JS获取不到
+  res.cookie('age',8,{
+    httpOnly:true
   });
   res.send('ok');
 });
