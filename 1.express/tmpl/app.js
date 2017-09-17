@@ -100,5 +100,8 @@ app.get('/signout',checkLogin,function(req,res){
 app.get('/user',checkLogin,function(req,res){
   res.render('user',{title:'用户主页',username:req.session.username});
 });
+app.get('/validate',function(req,res){
+ req.session.username?res.send({logged:1}):res.send({logged:0});
+})
 //自己实现一个登录功能 /signin   /
 app.listen(8080);
