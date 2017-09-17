@@ -18,7 +18,13 @@ app.get('/eat',function(req,res){
   req.session.amount -= 200;
   res.send(`你的余额是${req.session.amount}`);
 });
+//统计每个客户端访问的次数
 app.get('/visit',function(req,res){
-
+  let visit = req.session.visit;
+  if(!visit)
+    req.session.visit  = 1;
+  else
+    req.session.visit  += 1;
+  res.send(`欢迎你的第${req.session.visit}次光临`);
 });
 app.listen(8080);

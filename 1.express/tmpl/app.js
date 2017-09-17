@@ -8,7 +8,7 @@
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
-let cookieParser = require('cookie-parser');
+
 let path = require('path');
 //如果要想在express中使用模板，设置以下步骤
 //因为模板有很多种，需要告诉express模板的格式是什么
