@@ -14,5 +14,21 @@
     密码 <input type="password" name="password"><br/>
     <input type="submit">
 </form>
+<script type="text/javascript">
+    window.onload = function(){
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET','/validate',true);
+      xhr.responseType = 'json';
+      xhr.onload = function(){
+        if(xhr.status == 200){
+          let result = xhr.response;// 未{logged:0} 已登录 {logged:1}
+          if(result.logged == 1){
+            location.href = '/user';
+          }
+        }
+      }
+      xhr.send();
+    }
+</script>
 </body>
 </html>
