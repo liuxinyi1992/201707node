@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<script>
+  //  WebSocket 是原生的JS对象
+  // ws没有跨域的问题
+  let ws = new WebSocket('ws://127.0.0.1:8080');
+  //监听连接成功事件
+  ws.onopen = function(){
+    console.log('连接成功');
+    //客户端向服务器发消息
+    ws.send('服务器你好!');
+  }
+  ws.onmessage = function(event){
+    //事件对象的data属性就是服务器发过来的消息
+    console.log(event.data);
+  }
+</script>
+</body>
+</html>
