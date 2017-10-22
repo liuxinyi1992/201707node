@@ -46,6 +46,11 @@ io.on('connection',function(socket){
      io.emit('user-added',username);
    }
  });
+ //监听客户端发过来的请求，把用户数组返回
+ socket.on('users',function(){
+   let userList = Object.keys(clients);
+   socket.emit('userList',userList);
+ });
 });
 server.listen(8080);
 

@@ -60,9 +60,10 @@
   //此脚本会在window上增加一个io的属性
   //http://localhost:8080/=/=空
   let socket = io();
-  //当客户端连接服务器成功之后
-  /*socket.on('connect',function(){
-  });*/
+  //当客户端连接服务器成功之后,向后台发送一个消息，问一下现在有哪些在线用户
+  socket.on('connect',function(){
+    socket.emit('users');
+  });
   let messageUl = document.querySelector('#messageUl');
   let userUl = document.querySelector('#userUl');
   //监听服务器发过来的消息
@@ -71,6 +72,12 @@
     li.className = 'list-group-item';
     li.innerHTML = `${msgObj.username}:${msgObj.content} <span class="pull-right">${new Date(msgObj.createAt).toLocaleString()}</span>`;
     messageUl.appendChild(li);
+  });
+  socket.on('userList',function(userList){
+   userUl.innerHTML =  userList.map(item=>(
+     `<li class="list-group-item">${item}</li>`
+   )).join('');
+   countUser();
   });
   socket.on('user-added',function(username){
     let li = document.createElement('li');
