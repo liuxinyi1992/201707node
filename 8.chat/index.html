@@ -38,7 +38,7 @@
                     <h4>在线用户</h4>
                 </div>
                 <div class="panel-body">
-                    <ul class="list-group"></ul>
+                    <ul class="list-group" id="userUl"></ul>
                 </div>
                 <div class="panel-footer">
                     <h4>在线人数 0</h4>
@@ -56,13 +56,24 @@
   /*socket.on('connect',function(){
   });*/
   let messageUl = document.querySelector('#messageUl');
+  let userUl = document.querySelector('#userUl');
   //监听服务器发过来的消息
-  socket.on('message',function(message){
+  socket.on('message',function(msgObj){
     let li = document.createElement('li');
     li.className = 'list-group-item';
-    li.innerHTML = message;
+    li.innerHTML = `${msgObj.username}:${msgObj.content} <span class="pull-right">${new Date(msgObj.createAt).toLocaleString()}</span>`;
     messageUl.appendChild(li);
   });
+  socket.on('user-added',function(username){
+    let li = document.createElement('li');
+    li.className = 'list-group-item';
+    li.innerHTML = username;
+    userUl.appendChild(li);
+    countUser();
+  });
+  function countUser(){
+
+  }
   let txtMsg = document.querySelector('#txtMsg');
   //发送事件
   function send(){
