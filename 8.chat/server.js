@@ -14,6 +14,8 @@ io.on('connection',function(socket){
   //监听客户端的发过来的消息，当消息发过来的时候执行回调函数
  socket.on('message',function(data){
    if(username){
+     //判断是公聊还是私聊
+
      //正常发言，向所有的客户端进行广播
      io.emit('message',{
        username,content:data,createAt:new Date()
