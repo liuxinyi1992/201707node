@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>珠峰培训 www.zhufengpeixun.cn</title>
+</head>
+<body>
+<div class="clock"></div>
+<script>
+setInterval(function(){
+  let xhr = new XMLHttpRequest();
+  xhr.open('GET','http://localhost:8080/clock',true);
+  xhr.onreadystatechange = function(){
+    if(xhr.readyState== 4 && xhr.status == 200){
+      document.querySelector('.clock').innerHTML = xhr.responseText;
+    }
+  }
+  xhr.send();
+},1000)
+</script>
+</body>
+</html>
