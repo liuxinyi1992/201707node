@@ -41,7 +41,7 @@
                     <ul class="list-group" id="userUl"></ul>
                 </div>
                 <div class="panel-footer">
-                    <h4>在线人数 0</h4>
+                    <h4 id="onlineUsers">在线人数 0</h4>
                 </div>
             </div>
         </div>
@@ -49,6 +49,8 @@
 </div>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+  let txtMsg = document.querySelector('#txtMsg');
+  let onlineUsers = document.querySelector('#onlineUsers');
   //此脚本会在window上增加一个io的属性
   //http://localhost:8080/=/=空
   let socket = io();
@@ -72,9 +74,9 @@
     countUser();
   });
   function countUser(){
-
+    onlineUsers.innerHTML = `在线人数 ${userUl.children.length}`;
   }
-  let txtMsg = document.querySelector('#txtMsg');
+
   //发送事件
   function send(){
     let content = txtMsg.value;//先拿到聊天的内容
