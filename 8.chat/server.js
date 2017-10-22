@@ -7,6 +7,8 @@ app.get('/',function(req,res){
 let server = require('http').createServer(app);
 //socket.io是依赖http服务器
 let io = require('socket.io')(server);
+//声明一个对象，保存所有的客户端用户名和它们的socket对应关系
+let clients = {};
 //监听客户端的连接，当连接到来的时候执行此回调函数
 io.on('connection',function(socket){
   //在函数的内部声明一个变量，叫username
@@ -15,13 +17,27 @@ io.on('connection',function(socket){
  socket.on('message',function(data){
    if(username){
      //判断是公聊还是私聊
-
-     //正常发言，向所有的客户端进行广播
-     io.emit('message',{
-       username,content:data,createAt:new Date()
-     });
+     let reg = /@([^ ]+) (.+)/;
+     let result = data.match(reg);
+     if(result){//如果result有值则匹配上了
+       //此处是私聊
+       let toUser = result[1];
+       let content = result[2];
+       clients[toUser] && clients[toUser].send({
+          username,
+          content,
+         createAt:new Date()
+       });
+     }else{//没匹配上
+       //正常发言，向所有的客户端进行广播
+       io.emit('message',{
+         username,content:data,createAt:new Date()
+       });
+     }
    }else{
      username = data;//把这个消息当成用户名
+     //关联起来
+     clients[username]= socket;
      //向所有的客户端广播说有新的用户加入聊天室
      io.emit('message',{
        username:'系统',content:`欢迎 ${username} 加入聊天室`,createAt:new Date()
