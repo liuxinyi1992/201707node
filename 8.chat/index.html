@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <title>珠峰培训 www.zhufengpeixun.cn</title>
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        .user{
+            color:lightskyblue;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -69,7 +75,7 @@
   socket.on('user-added',function(username){
     let li = document.createElement('li');
     li.className = 'list-group-item';
-    li.innerHTML = username;
+    li.innerHTML = `<span class="user">${username}</span>`;
     userUl.appendChild(li);
     countUser();
   });
@@ -87,6 +93,15 @@
     if(event.keyCode == 13)
       send();
   }
+  //给父级绑定点击事件 事件委托
+  //要判断点的是span而非别的元素
+  userUl.addEventListener('click',function(event){
+    //如果事件源的类名是user的话
+    if(event.target.className == 'user'){
+      let username = event.target.innerHTML;
+      txtMsg.value = `@${username} `;
+    }
+  })
 
 
 </script>
